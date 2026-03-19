@@ -82,7 +82,7 @@ download_just_one_csv_with_checks <- function(station_name = NULL, station_ID = 
 
   if(is.null(station_name)){
     if(is.null(station_ID_real)){
-      return("Please enter either a station name or station ID")
+      message("Please enter either a station name or station ID")
     } else{
       station_name_real <- dat_subset$Name
     }

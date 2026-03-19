@@ -10,7 +10,9 @@
 #' @export
 #'
 
-download_all_one_station_one_year <- function(station_name = NULL, station_ID = NULL, year){
+download_all_one_station_one_year <- function(station_name = NULL,
+                                              station_ID = NULL,
+                                              year){
 
   months <- 1:12
   year_to_run <- year
