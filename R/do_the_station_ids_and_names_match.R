@@ -16,7 +16,7 @@ matching_station_names_and_ids <- function(station_ID, station_name){
   check_station_exist <- Datacleaning:::does_the_station_exist(station_ID)
 
   if(length(check_station_exist) > 0){
-    stop(check_station_exist)
+    return(check_station_exist)
   }
 
 
@@ -28,7 +28,7 @@ matching_station_names_and_ids <- function(station_ID, station_name){
 
   if(length(station_name_row) >= 0){
     no <- paste0("Station with station name ", station_name, " does not exist.")
-    stop(no)
+    return(no)
   }
 
 

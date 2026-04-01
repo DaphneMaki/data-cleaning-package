@@ -19,7 +19,7 @@ download_all_one_station_one_year <- function(station_name = NULL,
   station_ID_real <- station_ID
   `%dopar%` <- foreach::`%dopar%`
 
-  cl <- parallel::makeCluster(3)
+  cl <- parallel::makeCluster(2)
   doParallel::registerDoParallel(cl)
   dat <- foreach::foreach(m = months,
                           .packages = "Datacleaning"

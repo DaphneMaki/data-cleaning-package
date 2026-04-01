@@ -1,7 +1,27 @@
 download_all_one_station <- function(station_name = NULL, station_ID = NULL){
 
-  station_name_real <- station_name
   station_ID_real <- station_ID
+
+  if(is.null(station_ID)){
+  check_name <- Datacleaning:::station_id_finder(station_name = station_name)
+    if(is.numeric(check_name) == FALSE){
+      stop(check_name)
+    } else{
+      station_ID_real <- check_name
+
+      }
+
+  }
+
+  check_ID <- Datacleaning:::all_station_id_checks_slapped_into_one(station_ID = station_ID_real)
+
+  if(is.null(check_ID) == FALSE){
+    stop(check_ID)
+  }
+
+
+
+  station_name_real <- station_name
 
 
   load("data/station_meta_data.rda")

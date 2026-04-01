@@ -36,8 +36,6 @@ station_id_finder <- function(station_name){
     return(station_ID_dat$Station.ID)
 
 
-    #station_ID_real <-station_ID_dat$Station.ID #|> as.numeric() for some reason this shit doesn't work and just returns 123456789
-    #return(station_ID)
     }
 
 
