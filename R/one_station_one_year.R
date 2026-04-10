@@ -13,6 +13,39 @@
 download_all_one_station_one_year <- function(station_name = NULL,
                                               station_ID = NULL,
                                               year){
+  station_ID2 <- station_ID
+  if(is.null(station_ID2)){
+    station_ID2 <- Datacleaning:::station_id_finder(station_name = station_name)
+  }
+
+  if(is.character(station_ID2)){
+    stop(station_ID2)
+  }
+
+  does_id_exist <- Datacleaning:::does_the_station_exist(station_ID2)
+
+  if(is.null(does_id_exist) == FALSE){
+    stop(does_id_exist)
+  }
+
+  if(is.null(station_name) == FALSE){
+
+    id_name_match_check <- Datacleaning:::matching_station_names_and_ids(station_ID = station_ID2, station_name = station_name)
+
+    if(is.null(id_name_match_check) == FALSE){
+      stop(id_name_match_check)
+    }
+  }
+
+
+
+  station_ID_checks <- Datacleaning:::all_station_id_checks_slapped_into_one(station_ID = station_ID2)
+
+  if(is.null(station_ID_checks) == FALSE){
+    stop(station_ID_checks)
+  }
+
+
 
   months <- 1:12
   year_to_run <- year
@@ -29,7 +62,8 @@ download_all_one_station_one_year <- function(station_name = NULL,
                               year = year_to_run,
                               month = m)}
   parallel::stopCluster(cl)
-  return(dat)
+  dat2 <- do.call("rbind", dat)
+  return(dat2)
 }
 
 

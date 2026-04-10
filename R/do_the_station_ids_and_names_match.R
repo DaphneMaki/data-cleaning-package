@@ -26,7 +26,7 @@ matching_station_names_and_ids <- function(station_ID, station_name){
 
   station_name_row <- which(check_names == station_name_nospaces_or_underscores)
 
-  if(length(station_name_row) >= 0){
+  if(length(station_name_row) == 0){
     no <- paste0("Station with station name ", station_name, " does not exist.")
     return(no)
   }
@@ -35,10 +35,11 @@ matching_station_names_and_ids <- function(station_ID, station_name){
   dat <- station_meta_data[station_name_row, ]
 
 
-  if((dat$Station.ID == station_ID) & (check_names[station_name_row] == station_name_nospaces_or_underscores)){
+  if((any(dat$Station.ID) == station_ID) &
+     (check_names[station_name_row][1] == station_name_nospaces_or_underscores)){
     return(NULL)
   } else {
-    station_name_missmatch <- paste0("Station ", station_name, " is not associated with the station ID", station_ID, ".")
+    station_name_missmatch <- paste0("Station ", station_name, " is not associated with the station ID ", station_ID, ".")
     return(station_name_missmatch)
   }
 
