@@ -15,7 +15,3 @@ a shiny app that you can interact with to help compare missingness of data acros
 \description{
 Makes an interactive barcoode looking graph that shows where and which data point are missing.Just like the other shiny app,  I for some reason could not get my checks to work, so just don't be an idiot and use the data from the database.
 }
-\examples{
-missing_data_visualiser_barcodes(demo_data)
-
-}

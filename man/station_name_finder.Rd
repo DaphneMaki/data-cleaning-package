@@ -15,7 +15,3 @@ Give you the station name associated with the entered station ID.
 \description{
 That's it. That's all it does. It finds your station name based on the station ID.
 }
-\examples{
-station_name_finder(1234)
-
-}
