@@ -14,7 +14,7 @@
 #'
 station_helper <- function(province, available_year, starting_letter){
 
-  load("data/station_meta_data.rda")
+  data("station_meta_data", package = "Datacleaning")
 
   dat <- station_meta_data |> dplyr::filter(HLY.First.Year > 1)
 

@@ -7,9 +7,6 @@
 #' @return Give you the station name associated with the entered station ID.
 #'
 #'
-#' @examples
-#' station_name_finder(1234)
-#'
 station_name_finder <- function(station_ID){
 
   exist <- Datacleaning:::does_the_station_exist(station_ID = station_ID)

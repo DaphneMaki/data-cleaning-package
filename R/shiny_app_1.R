@@ -7,9 +7,6 @@
 #' @return a shiny app that you can interact with to help compare missingness of data across stations.
 #' @export
 #'
-#' @examples
-#' missing_data_visualiser_heatmap(demo_data)
-#'
 missing_data_visualiser_heatmap <- function(dat){
 
   # all_col_names <- colnames(dat)

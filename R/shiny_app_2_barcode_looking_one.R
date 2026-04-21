@@ -7,8 +7,6 @@
 #' @return a shiny app that you can interact with to help compare missingness of data across stations.
 #' @export
 #'
-#' @examples
-#' missing_data_visualiser_barcodes(demo_data)
 #'
 missing_data_visualiser_barcodes <- function(dat){
 

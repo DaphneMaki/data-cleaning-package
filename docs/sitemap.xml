@@ -1,0 +1,24 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/Vingette.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/col_fixer.html</loc></url>
+<url><loc>/reference/does_have_hourly_data.html</loc></url>
+<url><loc>/reference/download_all_one_station.html</loc></url>
+<url><loc>/reference/download_all_one_station_one_year.html</loc></url>
+<url><loc>/reference/download_all_station_data.html</loc></url>
+<url><loc>/reference/download_just_one_csv_with_checks.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/make_database.html</loc></url>
+<url><loc>/reference/matching_station_names_and_ids.html</loc></url>
+<url><loc>/reference/missing_data_visualiser_barcodes.html</loc></url>
+<url><loc>/reference/missing_data_visualiser_heatmap.html</loc></url>
+<url><loc>/reference/miss_id.html</loc></url>
+<url><loc>/reference/reader_and_name_fixer.html</loc></url>
+<url><loc>/reference/station_helper.html</loc></url>
+<url><loc>/reference/station_id_finder.html</loc></url>
+<url><loc>/reference/station_name_finder.html</loc></url>
+</urlset>
+

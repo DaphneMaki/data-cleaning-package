@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Daphne Maki" />
+
+<meta name="date" content="2026-04-21" />
+
+<title>Data cleaning class package</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Data cleaning class package</h1>
+<h4 class="author">Daphne Maki</h4>
+<h4 class="date">2026-04-21</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Alright here we go! This is the package that I ended up with for my
+class on data cleaning and reproducible research at Trent University.
+I’m doing my best. If it doesn’t work, then that’s probably because I’m
+new to this… Using this package you can:</p>
+<ul>
+<li>easily search the metadata to help you find the stations that meet
+your criteria (or, well, certain criteria)</li>
+<li>download a singular month from a singular year from a singular
+station</li>
+<li>download all of the hourly data from a given year from a given
+station</li>
+<li>download all of the available hourly data across all available years
+from a given station</li>
+<li>download all of the data from all of the stations</li>
+<li>create an SQLite database of your downloaded data</li>
+<li>create two different shiny app to visualise missing data</li>
+</ul>
+</div>
+<div id="searching-the-metadata" class="section level2">
+<h2>Searching the metadata</h2>
+<p>It’s just wanted a quality of life thing really, I personally don’t
+like parsing through files to ensure that my stations meet my criteria,
+so I made a function to do it for me.</p>
+<p>You can make it search by province:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">province =</span> <span class="st">&quot;Ontario&quot;</span>)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="30%" />
+<col width="12%" />
+<col width="15%" />
+<col width="21%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ATTAWAPISKAT A</td>
+<td align="left">ONTARIO</td>
+<td align="right">52918</td>
+<td align="right">2015</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">BIG TROUT LAKE A</td>
+<td align="left">ONTARIO</td>
+<td align="right">49488</td>
+<td align="right">2011</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">BIG TROUT LAKE</td>
+<td align="left">ONTARIO</td>
+<td align="right">3914</td>
+<td align="right">1953</td>
+<td align="right">1992</td>
+</tr>
+<tr class="even">
+<td align="left">BIG TROUT LAKE READAC</td>
+<td align="left">ONTARIO</td>
+<td align="right">10804</td>
+<td align="right">1994</td>
+<td align="right">2013</td>
+</tr>
+<tr class="odd">
+<td align="left">BIG TROUT LAKE</td>
+<td align="left">ONTARIO</td>
+<td align="right">50857</td>
+<td align="right">2012</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">EAR FALLS (AUT)</td>
+<td align="left">ONTARIO</td>
+<td align="right">27865</td>
+<td align="right">2000</td>
+<td align="right">2023</td>
+</tr>
+</tbody>
+</table>
+<p>Or by available year:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">available_year =</span> <span class="dv">1999</span>)</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="24%" />
+<col width="22%" />
+<col width="14%" />
+<col width="20%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">DISCOVERY ISLAND</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">27226</td>
+<td align="right">1997</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">ESQUIMALT HARBOUR</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">52</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">KELP REEFS</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">10853</td>
+<td align="right">1997</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">MALAHAT</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">65</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">RACE ROCKS</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">10943</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">SATURNA ISLAND CS</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">96</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+</tbody>
+</table>
+<p>Or even by the starting letter(s) of the station:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">starting_letter =</span> <span class="st">&quot;Z&quot;</span>)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="24%" />
+<col width="26%" />
+<col width="13%" />
+<col width="18%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">YOHO PARK</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">6844</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">YELLOWKNIFE A</td>
+<td align="left">NORTHWEST TERRITORIES</td>
+<td align="right">1706</td>
+<td align="right">1953</td>
+<td align="right">2013</td>
+</tr>
+<tr class="odd">
+<td align="left">YELLOWKNIFE A</td>
+<td align="left">NORTHWEST TERRITORIES</td>
+<td align="right">51058</td>
+<td align="right">2013</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">YELLOWKNIFE AIRPORT</td>
+<td align="left">NORTHWEST TERRITORIES</td>
+<td align="right">55358</td>
+<td align="right">2022</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">YOHIN</td>
+<td align="left">NORTHWEST TERRITORIES</td>
+<td align="right">1635</td>
+<td align="right">1973</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">YATHKYED LAKE (AUT)</td>
+<td align="left">NUNAVUT</td>
+<td align="right">10803</td>
+<td align="right">1993</td>
+<td align="right">2004</td>
+</tr>
+</tbody>
+</table>
+<p>The best part about the starting letter is that it’s not limited to
+just one letter, so if you know the start of the station name, it
+becomes even easier to find!</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">starting_letter =</span> <span class="st">&quot;OTT&quot;</span>)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="40%" />
+<col width="10%" />
+<col width="13%" />
+<col width="18%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">OTTAWA CDA RCS</td>
+<td align="left">ONTARIO</td>
+<td align="right">30578</td>
+<td align="right">2000</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">OTTAWA MACDONALD-CARTIER INT’L A</td>
+<td align="left">ONTARIO</td>
+<td align="right">4337</td>
+<td align="right">1953</td>
+<td align="right">2011</td>
+</tr>
+<tr class="odd">
+<td align="left">OTTAWA INTL A</td>
+<td align="left">ONTARIO</td>
+<td align="right">49568</td>
+<td align="right">2011</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">OTTAWA ROCKCLIFFE A</td>
+<td align="left">ONTARIO</td>
+<td align="right">4344</td>
+<td align="right">1953</td>
+<td align="right">1964</td>
+</tr>
+<tr class="odd">
+<td align="left">OTTAWA STOLPORT A</td>
+<td align="left">ONTARIO</td>
+<td align="right">7684</td>
+<td align="right">1974</td>
+<td align="right">1976</td>
+</tr>
+<tr class="even">
+<td align="left">OTTAWA GATINEAU A</td>
+<td align="left">QUEBEC</td>
+<td align="right">50719</td>
+<td align="right">2012</td>
+<td align="right">2023</td>
+</tr>
+</tbody>
+</table>
+<p>If you want, you can also use them in any combination!</p>
+<p>Province and year:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">province =</span> <span class="st">&quot;QC&quot;</span>, <span class="at">available_year =</span> <span class="dv">1967</span>)</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="44%" />
+<col width="10%" />
+<col width="12%" />
+<col width="17%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">QUEBEC/JEAN LESAGE INTL A</td>
+<td align="left">QUEBEC</td>
+<td align="right">5251</td>
+<td align="right">1953</td>
+<td align="right">2013</td>
+</tr>
+<tr class="even">
+<td align="left">TROIS-RIVIERES</td>
+<td align="left">QUEBEC</td>
+<td align="right">8321</td>
+<td align="right">1963</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">MONTREAL/PIERRE ELLIOTT TRUDEAU INTL A</td>
+<td align="left">QUEBEC</td>
+<td align="right">5415</td>
+<td align="right">1953</td>
+<td align="right">2013</td>
+</tr>
+<tr class="even">
+<td align="left">MONTREAL/ST-HUBERT A</td>
+<td align="left">QUEBEC</td>
+<td align="right">5490</td>
+<td align="right">1953</td>
+<td align="right">2005</td>
+</tr>
+<tr class="odd">
+<td align="left">SHERBROOKE A</td>
+<td align="left">QUEBEC</td>
+<td align="right">5530</td>
+<td align="right">1962</td>
+<td align="right">2005</td>
+</tr>
+<tr class="even">
+<td align="left">MANIWAKI UA</td>
+<td align="left">QUEBEC</td>
+<td align="right">5607</td>
+<td align="right">1953</td>
+<td align="right">1993</td>
+</tr>
+</tbody>
+</table>
+<p>Province and starting letter:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">province =</span> <span class="st">&quot;YT&quot;</span>, <span class="at">starting_letter =</span> <span class="st">&quot;T&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="18%" />
+<col width="23%" />
+<col width="15%" />
+<col width="21%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">TESLIN A</td>
+<td align="left">YUKON TERRITORY</td>
+<td align="right">1610</td>
+<td align="right">1953</td>
+<td align="right">2014</td>
+</tr>
+<tr class="even">
+<td align="left">TESLIN A</td>
+<td align="left">YUKON TERRITORY</td>
+<td align="right">52321</td>
+<td align="right">2014</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">TESLIN (AUT)</td>
+<td align="left">YUKON TERRITORY</td>
+<td align="right">8985</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">TESLIN A</td>
+<td align="left">YUKON TERRITORY</td>
+<td align="right">53027</td>
+<td align="right">2014</td>
+<td align="right">2023</td>
+</tr>
+</tbody>
+</table>
+<p>Year and starting letter:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">available_year =</span> <span class="dv">2005</span>, <span class="at">starting_letter =</span> <span class="st">&quot;Q&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="29%" />
+<col width="25%" />
+<col width="12%" />
+<col width="17%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">QUESNEL AWOS</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">30967</td>
+<td align="right">2005</td>
+<td align="right">2011</td>
+</tr>
+<tr class="even">
+<td align="left">QUESNEL A</td>
+<td align="left">BRITISH COLUMBIA</td>
+<td align="right">640</td>
+<td align="right">1953</td>
+<td align="right">2006</td>
+</tr>
+<tr class="odd">
+<td align="left">QAVVIK LAKE</td>
+<td align="left">NORTHWEST TERRITORIES</td>
+<td align="right">27889</td>
+<td align="right">2000</td>
+<td align="right">2011</td>
+</tr>
+<tr class="even">
+<td align="left">QIKIQTARJUAQ A</td>
+<td align="left">NUNAVUT</td>
+<td align="right">8271</td>
+<td align="right">1988</td>
+<td align="right">2013</td>
+</tr>
+<tr class="odd">
+<td align="left">QIKIQTARJUAQ CLIMATE</td>
+<td align="left">NUNAVUT</td>
+<td align="right">42803</td>
+<td align="right">2005</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">QUEBEC/JEAN LESAGE INTL A</td>
+<td align="left">QUEBEC</td>
+<td align="right">5251</td>
+<td align="right">1953</td>
+<td align="right">2013</td>
+</tr>
+</tbody>
+</table>
+<p>Even all three at the same time!</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">station_helper</span>(<span class="at">province =</span> <span class="st">&quot;PE&quot;</span>, <span class="at">available_year =</span> <span class="dv">2020</span>, <span class="at">starting_letter =</span> <span class="st">&quot;S&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="15%" />
+<col width="29%" />
+<col width="15%" />
+<col width="20%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Province</th>
+<th align="right">Station.ID</th>
+<th align="right">HLY.First.Year</th>
+<th align="right">HLY.Last.Year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ST. PETERS</td>
+<td align="left">PRINCE EDWARD ISLAND</td>
+<td align="right">41903</td>
+<td align="right">2003</td>
+<td align="right">2023</td>
+</tr>
+<tr class="even">
+<td align="left">STANHOPE</td>
+<td align="left">PRINCE EDWARD ISLAND</td>
+<td align="right">6545</td>
+<td align="right">2013</td>
+<td align="right">2023</td>
+</tr>
+<tr class="odd">
+<td align="left">SUMMERSIDE</td>
+<td align="left">PRINCE EDWARD ISLAND</td>
+<td align="right">10800</td>
+<td align="right">1994</td>
+<td align="right">2023</td>
+</tr>
+</tbody>
+</table>
+<p>Now that we know how to find our stations of intrest, let’s go
+download some data!</p>
+</div>
+<div id="data-downloading" class="section level2">
+<h2>Data downloading</h2>
+<p>Depending on the amount of data that you want, there are several
+different functions that you could use. Let’s start at the smallest.</p>
+<div id="downloading-just-one-csv-file" class="section level3">
+<h3>Downloading just one csv file</h3>
+<p>This is the smallest of the bunch. This one will just download one
+month of data from the station and year of your choice. All you need to
+do is provide it with: the month and year you want downloaded, and
+either a station name or station ID. While you do not need to provide
+both, it is recommended that you do so. This and all of the other
+download functions also have the option to make the downloads into
+temporary files in your R environment instead on downloading them
+straight to your computer. While the function defaults to saving to your
+computer, you can make the files temporary, use
+<code>temporary = TRUE</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">download_just_one_csv_with_checks</span>(<span class="at">station_name =</span> <span class="st">&quot;SUMMERSIDE&quot;</span>, </span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>                                                <span class="at">station_ID =</span><span class="dv">10800</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>                                                <span class="at">year =</span> <span class="dv">2001</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                                                <span class="at">month =</span> <span class="dv">12</span>, </span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                                                <span class="at">temporary =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<div id="downloading-a-stations-data-for-the-full-year" class="section level3">
+<h3>Downloading a station’s data for the full year</h3>
+<p>One step up we can download all twelve months for one station for a
+selected year. Once again, you’ll only need the year of interest and the
+station names and/or station ID. Again, having both is recommended, but
+unnecessary. Just like the previous function, this one has the option to
+make the downloads into temporary files in your R environment instead on
+downloading them straight to your computer. While the function defaults
+to saving to your computer, you can make the files temporary, use
+<code>temporary = TRUE</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">download_all_one_station_one_year</span>(<span class="at">station_name =</span> <span class="st">&quot;OTTAWA STOLPORT A&quot;</span>, </span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>                                                <span class="at">station_ID =</span> <span class="dv">7684</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                                                <span class="at">year =</span> <span class="dv">1975</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>                                                <span class="at">temporary =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<div id="an-entire-station" class="section level3">
+<h3>An entire station</h3>
+<p>We can also download an entire station’s worth of hourly data. That
+is to say every month of every year that the station was collecting
+hourly data. All you need for this one is the station name and/or
+station ID. Just like the others, this function has the option to make
+the downloads into temporary files in your R environment instead on
+downloading them straight to your computer. While the function defaults
+to saving to your computer, you can make the files temporary, use
+<code>temporary = TRUE</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">download_all_one_station</span>(<span class="at">station_name =</span> <span class="st">&quot;QUEBEC/JEAN LESAGE INTL A&quot;</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>                                       <span class="at">station_ID =</span> <span class="dv">5251</span>, </span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>                                       <span class="at">temporary =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<div id="all-of-the-stations-and-all-of-the-files" class="section level3">
+<h3>All of the stations and all of the files</h3>
+<p>And now we have the big boys. Downloading all of the available hourly
+station data from all of the stations in all of Canada. You don’t even
+need to enter anything for this one! Now, say it with me, like the
+others, this function has the option to make the downloads into
+temporary files in your R environment instead on downloading them
+straight to your computer. While the function defaults to saving to your
+computer, you can make the files temporary, use
+<code>temporary = TRUE</code>. Why you would want to save this as a
+temporary file? I don’t know, but it’s a thing you can do if you so
+choose.</p>
+<p>There is also an option in this one to select and download random
+stations, as it was used as a way for me to test my function without
+having to run the entire thing over and over and over again. So added
+functionality I guess? That was never the main goal of this function
+though… You can make it chose some random stations by using the
+<code>limit_for_testing</code> argument and setting it to the number of
+stations that you want to download.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">download_all_station_data</span>(<span class="at">limit_for_testing_purposes =</span> <span class="dv">4</span>, </span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>                                        <span class="at">temporary =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="making-an-sqlite-database" class="section level2">
+<h2>Making an SQLite database</h2>
+<p>Because we have entirely too many csv files, we can shove them all
+into a database to make it easier to use. What this function does is to
+take your file path, look at all the subdirectories—such as those
+created by the above download functions—and take all of the csv files to
+shove into a database. This database has two tables, the station table,
+which contains the station metadata, and the observation table, which
+contains all the observation data. Please be aware that this will look
+at ALL the csv files in the selected directory and subdirectories, so if
+you just have a random csv file not downloaded through the above
+download functions, it will go wonky and may break on you.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">make_database</span>(<span class="at">file_path_to_csv_files =</span> <span class="st">&quot;./station_data&quot;</span>, </span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>              <span class="at">database_name =</span> <span class="st">&quot;Hourly_Weather_Station_Database.sqlie&quot;</span>)</span></code></pre></div>
+</div>
+<div id="its-all-so-shiny-apps" class="section level2">
+<h2>It’s all so Shiny (Apps)!</h2>
+<p>There are two shiny apps that can help you visualise missing data.
+Let’s start with the heatmap.</p>
+<div id="shiny-heatmap" class="section level3">
+<h3>Shiny Heatmap</h3>
+<p>This is a sanity check to help you look at the percentages of missing
+data between and within stations. Because there are SO. MANY. STATIONS,
+it’s much more convenient to have an interactive app than 2000
+individual plots. Now, this function is finicky because I couldn’t quite
+get my bullet proofing, so just don’t be an idiot.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">missing_data_visualiser_heatmap</span>(<span class="at">dat =</span> demo_data)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="bar-code-looking-thing" class="section level3">
+<h3>Bar code looking thing</h3>
+<p>This is another sanity check that looks at weather a variable is
+missing at each observation for an entire year at one station. As there
+would be one graph per year per station, could you imagine making that
+many graphs manually? I would not like it, so I made this instead to
+help with comparison. Once run, you can select both the station and year
+of interest. Also the graphs look like a bar code.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>Datacleaning<span class="sc">::</span><span class="fu">missing_data_visualiser_barcodes</span>(<span class="at">dat =</span> demo_data)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
