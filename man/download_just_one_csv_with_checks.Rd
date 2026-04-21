@@ -23,7 +23,7 @@ download_just_one_csv_with_checks(
 \item{month}{\code{month}; the month}
 }
 \value{
-dat
+a \code{data.frame} that has the hourly data from one month from one year from one station.
 }
 \description{
 Function that downloads one file from one year from one station

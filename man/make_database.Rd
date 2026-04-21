@@ -15,5 +15,5 @@ make_database(file_path_to_csv_files, database_name)
 Makes an SQLite database on your computer in your working directory. In this database is the station metadata as well as all of the observations from the csv files provided.
 }
 \description{
-SQLite Database maker
+This functions makes a SQLite database out of the csv files downloaded from Environment Canada.
 }

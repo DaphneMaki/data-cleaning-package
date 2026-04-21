@@ -18,7 +18,7 @@ download_all_station_data(
 \item{temporary}{this determines if the files are temporary or if they are saved to the computer. Defaults to FALSE.}
 }
 \value{
-if \code{temporary} is set to TRUE, this (theoretically) returns a giant data frame of all of the hourly station data from all available years and all available stations. If \code{temporary} is set to FALSE, those files will be downloaded in subdirectories named after their associated station.
+if \code{temporary} is set to TRUE, this (theoretically) returns a giant data frame of all of the hourly station data from all available years and all available stations. Or apparently as a list of \code{data.frame}s, which I'm not sure why it's doing that and am too tired to figure out. If \code{temporary} is set to FALSE, those files will be downloaded in subdirectories named after their associated station.
 }
 \description{
 This function downloads all of the hourly station data across all avalible stations for every year that data is avalible.

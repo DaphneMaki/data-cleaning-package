@@ -14,8 +14,9 @@
 #'
 station_helper <- function(province, available_year, starting_letter){
 
+  load("data/station_meta_data.rda")
 
-  dat <- station_meta_data
+  dat <- station_meta_data |> dplyr::filter(HLY.First.Year > 1)
 
   if(missing(province) == FALSE){
 
@@ -76,7 +77,7 @@ station_helper <- function(province, available_year, starting_letter){
     if(is.numeric(available_year) == FALSE){
       stop("Check that you're year is actually a year, also known as a number.")
     }
-    if(length(avalible_year) > 1){
+    if(length(available_year) > 1){
       stop("Please enter only a single year.")
 
     }

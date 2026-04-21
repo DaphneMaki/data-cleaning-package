@@ -1,5 +1,7 @@
 #' SQLite Database maker
 #'
+#'This functions makes a SQLite database out of the csv files downloaded from Environment Canada.
+#'
 #' @param file_path_to_csv_files the directory in which your csv files are stored
 #' @param database_name the name you want to give your database. This should end in "sqlite".
 #'

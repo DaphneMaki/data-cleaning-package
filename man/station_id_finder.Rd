@@ -10,7 +10,7 @@ station_id_finder(station_name)
 \item{station_name}{}
 }
 \value{
-station_ID
+the station ID or IDs associated with a certain station name.
 }
 \description{
 This function will find your station ID based on the station name and will tell you if there are multiple stations that have the same name.

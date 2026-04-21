@@ -20,7 +20,7 @@ download_all_one_station_one_year(
 \item{year}{\code{year}; the year}
 }
 \value{
-dat \code{dat}; a list containing all the downloaded csv files
+dat \code{dat}; a data.frame containing all the downloaded csv files
 }
 \description{
 Function that downloads hourly data of one year from one station.

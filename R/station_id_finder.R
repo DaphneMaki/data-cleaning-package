@@ -4,7 +4,7 @@
 #'
 #' @param station_name
 #'
-#' @return station_ID
+#' @return the station ID or IDs associated with a certain station name.
 #'
 station_id_finder <- function(station_name){
 

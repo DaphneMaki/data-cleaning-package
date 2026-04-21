@@ -6,7 +6,7 @@
 #' @param station_ID \code{station_ID}; the station ID
 #' @param year \code{year}; the year
 #'
-#' @return dat \code{dat}; a list containing all the downloaded csv files
+#' @return dat \code{dat}; a data.frame containing all the downloaded csv files
 #' @export
 #'
 

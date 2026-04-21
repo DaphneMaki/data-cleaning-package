@@ -7,7 +7,7 @@
 #' @param year \code{year}; the year
 #' @param month \code{month}; the month
 #'
-#' @return dat
+#' @return a \code{data.frame} that has the hourly data from one month from one year from one station.
 #' @export
 #'
 

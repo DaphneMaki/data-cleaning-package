@@ -1,0 +1,233 @@
+---
+title: "Data cleaning class package"
+author: "Daphne Maki"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+Alright here we go! This is the package that I ended up with for my class on data cleaning and reproducible research at Trent University. I'm doing my best. If it doesn't work, then that's probably because I'm new to this... Using this package you can: 
+
+- easily search the metadata to help you find the stations that meet your criteria (or, well, certain criteria)
+- download a singular month from a singular year from a singular station
+- download all of the hourly data from a given year from a given station
+- download all of the available hourly data across all available years from a given station
+- download all of the data from all of the stations
+- create an SQLite database of your downloaded data
+- create  two different shiny app to visualise missing data
+
+## Searching the metadata
+
+It's just wanted a quality of life thing really, I personally don't like parsing through files to ensure that my stations meet my criteria, so I made a function to do it for me.
+
+You can make it search by province:
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(province = "Ontario")
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(province = "Ontario"), 6))
+```
+
+Or by available year:
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(available_year = 1999)
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(available_year = 1999), 6))
+```
+
+Or even by the starting letter(s) of the station:
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(starting_letter = "Z")
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(starting_letter = "Y"), 6))
+```
+
+The best part about the starting letter is that it's not limited to just one letter, so if you know the start of the station name, it becomes even easier to find!
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(starting_letter = "OTT")
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(starting_letter = "OTT"), 6))
+```
+
+
+If you want, you can also use them in any combination!
+
+Province and year:
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(province = "QC", available_year = 1967)
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(province = "QC", available_year = 1967), 6))
+```
+
+Province and starting letter:
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(province = "YT", starting_letter = "T")
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(province = "YT", starting_letter = "T"), 6))
+```
+
+
+Year and starting letter:
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(available_year = 2005, starting_letter = "Q")
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(available_year = 2005, starting_letter = "Q"), 6))
+```
+
+Even all three at the same time!
+
+```{r, eval=FALSE}
+Datacleaning::station_helper(province = "PE", available_year = 2020, starting_letter = "S")
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(Datacleaning::station_helper(province = "PE", available_year = 2020, starting_letter = "S"), 6))
+```
+
+
+Now that we know how to find our stations of intrest, let's go download some data!
+
+## Data downloading
+
+Depending on the amount of data that you want, there are several different functions that you could use. Let's start at the smallest.
+
+### Downloading just one csv file
+
+This is the smallest of the bunch. This one will just download one month of data from the station and year of your choice. All you need to do is provide it with: the month and year you want downloaded, and either a station name or station ID. While you do not need to provide both, it is recommended that you do so. This and all of the other download functions also have the option to make the downloads into temporary files in your R environment instead on downloading them straight to your computer. While the function defaults to saving to your computer, you can make the files temporary, use `temporary = TRUE`. 
+
+```{r eval=FALSE}
+Datacleaning::download_just_one_csv_with_checks(station_name = "SUMMERSIDE", 
+                                                station_ID =10800, 
+                                                year = 2001,
+                                                month = 12, 
+                                                temporary = FALSE)
+```
+
+### Downloading a station's data for the full year
+
+One step up we can download all twelve months for one station for a selected year. Once again, you'll only need the year of interest and the station names and/or station ID. Again, having both is recommended, but unnecessary. Just like the previous function, this one has the option to make the downloads into temporary files in your R environment instead on downloading them straight to your computer. While the function defaults to saving to your computer, you can make the files temporary, use `temporary = TRUE`.
+
+```{r eval=FALSE}
+Datacleaning::download_all_one_station_one_year(station_name = "OTTAWA STOLPORT A", 
+                                                station_ID = 7684, 
+                                                year = 1975,
+                                                temporary = FALSE)
+```
+
+
+### An entire station
+
+We can also download an entire station's worth of hourly data. That is to say every month of every year that the station was collecting hourly data. All you need for this one is the station name and/or station ID. Just like the others, this function has the option to make the downloads into temporary files in your R environment instead on downloading them straight to your computer. While the function defaults to saving to your computer, you can make the files temporary, use `temporary = TRUE`.
+
+
+```{r eval=FALSE}
+Datacleaning::download_all_one_station(station_name = "QUEBEC/JEAN LESAGE INTL A",
+                                       station_ID = 5251, 
+                                       temporary = FALSE)
+```
+
+
+### All of the stations and all of the files
+
+And now we have the big boys. Downloading all of the available hourly station data from all of the stations in all of Canada. You don't even need to enter anything for this one! Now, say it with me, like the others, this function has the option to make the downloads into temporary files in your R environment instead on downloading them straight to your computer. While the function defaults to saving to your computer, you can make the files temporary, use `temporary = TRUE`. Why you would want to save this as a temporary file? I don't know, but it's a thing you can do if you so choose.
+
+There is also an option in this one to select and download random stations, as it was used as a way for me to test my function without having to run the entire thing over and over and over again. So added functionality I guess? That was never the main goal of this function though... You can make it chose some random stations by using the `limit_for_testing` argument and setting it to the number of stations that you want to download.
+
+```{r eval=FALSE}
+Datacleaning::download_all_station_data(limit_for_testing_purposes = 4, 
+                                        temporary = FALSE)
+```
+
+
+## Making an SQLite database
+
+Because we have entirely too many csv files, we can shove them all into a database to make it easier to use. What this function does is to take your file path, look at all the subdirectories---such as those created by the above download functions---and take all of the csv files to shove into a database. This database has two tables, the station table, which contains the station metadata, and the observation table, which contains all the observation data. Please be aware that this will look at ALL the csv files in the selected directory and subdirectories, so if you just have a random csv file not downloaded through the above download functions, it will go wonky and may break on you.
+
+```{r eval=FALSE}
+make_database(file_path_to_csv_files = "./station_data", 
+              database_name = "Hourly_Weather_Station_Database.sqlie")
+```
+
+
+## It's all so Shiny (Apps)!
+
+There are two shiny apps that can help you visualise missing data. Let's start with the heatmap.
+
+
+### Shiny Heatmap
+
+This is a sanity check to help you look at the percentages of missing data between and within stations. Because there are SO. MANY. STATIONS, it's much more convenient to have an interactive app than 2000 individual plots. Now, this function is finicky because I couldn't quite get my bullet proofing, so just don't be an idiot.
+
+```{r eval=FALSE}
+Datacleaning::missing_data_visualiser_heatmap(dat = demo_data)
+```
+
+
+```{r echo=FALSE}
+load("data/demo_data.rda")
+
+dat2 <- demo_data |> dplyr::mutate(
+    Station_Name_and_ID = paste(Station_Name, Climate_ID)
+  )
+
+
+dat_sub <- dat2 |>
+        dplyr::select(-c("Station_Name", "Climate_ID", "Month" ,"Day", "Time_LST",
+                  "Station_Name_and_ID"), -ends_with("lag"))
+
+      naniar::gg_miss_fct(dat_sub, fct = Year)
+```
+
+### Bar code looking thing
+
+This is another sanity check that looks at weather a variable is missing at each observation for an entire year at one station. As there would be one graph per year per station, could you imagine making that many graphs manually? I would not like it, so I made this instead to help with comparison. Once run, you can select both the station and year of interest. Also the graphs look like a bar code. 
+
+
+```{r eval=FALSE}
+Datacleaning::missing_data_visualiser_barcodes(dat = demo_data)
+```
+
+
+```{r echo=FALSE}
+dat_sub <- dat2 |>
+      dplyr::filter(Station_Name_and_ID == "YELLOWKNIFE A 2204100", 
+        Year == 2001) |>
+      dplyr::select(-c("Station_Name", "Climate_ID", "Month" ,"Day", "Time_LST",
+                "Station_Name_and_ID", "Year"))
+
+
+    naniar::vis_miss(dat_sub)
+```
+
