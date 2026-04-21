@@ -8,7 +8,9 @@ download_just_one_csv_with_checks(
   station_name = NULL,
   station_ID = NULL,
   year,
-  month
+  month,
+  temporary = FALSE,
+  testing = FALSE
 )
 }
 \arguments{

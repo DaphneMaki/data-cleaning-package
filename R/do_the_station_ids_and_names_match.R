@@ -35,11 +35,13 @@ matching_station_names_and_ids <- function(station_ID, station_name){
   dat <- station_meta_data[station_name_row, ]
 
 
-  if((any(dat$Station.ID) == station_ID) &
+  if((station_ID %in% dat$Station.ID) &
      (check_names[station_name_row][1] == station_name_nospaces_or_underscores)){
+
     return(NULL)
   } else {
     station_name_missmatch <- paste0("Station ", station_name, " is not associated with the station ID ", station_ID, ".")
+
     return(station_name_missmatch)
   }
 

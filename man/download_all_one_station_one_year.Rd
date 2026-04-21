@@ -4,7 +4,13 @@
 \alias{download_all_one_station_one_year}
 \title{csv downloader, one year, one station}
 \usage{
-download_all_one_station_one_year(station_name = NULL, station_ID = NULL, year)
+download_all_one_station_one_year(
+  station_name = NULL,
+  station_ID = NULL,
+  year,
+  temporary = FALSE,
+  testing = FALSE
+)
 }
 \arguments{
 \item{station_name}{\code{station_name}; the station name}
