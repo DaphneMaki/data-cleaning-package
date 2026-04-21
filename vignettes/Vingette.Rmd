@@ -55,7 +55,7 @@ knitr::kable(head(Datacleaning::station_helper(available_year = 1999), 6))
 Or even by the starting letter(s) of the station:
 
 ```{r, eval=FALSE}
-Datacleaning::station_helper(starting_letter = "Z")
+Datacleaning::station_helper(starting_letter = "Y")
 ```
 
 ```{r, echo=FALSE}
